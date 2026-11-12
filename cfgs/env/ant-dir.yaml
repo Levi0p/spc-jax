@@ -1,0 +1,5 @@
+# @package _global_
+env_name: ant-dir
+num_tasks: 40
+max_episode_steps: 200
+dataset_size: 200000
