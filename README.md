@@ -73,8 +73,8 @@ Small stuff I changed:
 - InfoNCE: the original groups the batch by task with a dict keyed on tensors, but tensors hash by id, so repeated task ids don't get merged (last one wins). Here they're averaged. Same result when all task ids in a batch are unique.
 - Sequence sampling: `SeqBuffer` skips the episode after the last done flag (for point-robot / cheetah-vel that's the first episode, since there are no done flags) and the last valid start index. Here any window inside one episode can be sampled.
 - MPPI works with all world models. In the original only `DiscreteCE.trans` takes `unc_prop_mode`, so planning crashes with the others.
-- Eval steps each env directly instead of `SyncVectorEnv` so autoreset steps don't end up in the context. The context embedding is kept as a running mean (same thing, cheaper).
-- Added `cfgs/env/` (the README mentions it but it's not in the repo). Episode lengths / task counts are from the env classes, mass/friction envs use `use_next_obs_in_context`. The point-robot DroQ budget (20k steps) is my choice, not from the paper.
+- Eval steps each env directly instead of `SyncVectorEnv`, just so it doesn't depend on gymnasium's autoreset behaviour. The context embedding is kept as a running mean (same thing, cheaper).
+- Added `cfgs/env/` (the README mentions it but it's not in the repo). Episode lengths / task counts are from the env classes, I turned on `use_next_obs_in_context` for the mass/friction envs because of the comment in `spc.yaml`, not sure if that's what you used. The point-robot DroQ budget (20k steps) is my choice, not from the paper.
 - Success rate stops counting once an env has done its episodes (the original can go above 1 on Meta-World). Returns are the same.
 - Not ported: FSQ/L2 options on the context encoder, the FOCAL loss in `spc.py` (all off by default), torch.compile/cuda graphs, video logging. `use_tanh` / `use_tar_enc` are always on, and `random_init_z` / `resample_every` are dropped since they don't do anything in the original.
 
